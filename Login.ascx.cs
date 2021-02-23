@@ -345,11 +345,11 @@ namespace DNN.Authentication.SAML
         {
             StringBuilder mysqlstring = new StringBuilder();
 
-            mysqlstring.Append("UPDATE {databaseOwner}aspnet_Membership SET LastLoginDate = @0 where UserId in (select UserId from {databaseOwner}aspnet_Users where UserName = @1)");
+            mysqlstring.Append("UPDATE {databaseOwner}aspnet_Membership SET LastLoginDate = getdate() where UserId in (select UserId from {databaseOwner}aspnet_Users where UserName = @0)");
 
             using (DotNetNuke.Data.IDataContext db = DataContext.Instance())
             {
-                db.Execute(System.Data.CommandType.Text, mysqlstring.ToString(), DateTime.Now.ToString(), username);
+                db.Execute(System.Data.CommandType.Text, mysqlstring.ToString(), username);
             }
         }
 
