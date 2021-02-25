@@ -62,20 +62,14 @@ namespace DNN.Authentication.SAML
                         string samlCertificate = config.TheirCert;
 
                         Saml.Response samlResponse = new Saml.Response(samlCertificate);
-                        LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("Request.Form[SAMLResponse]: {0}", Request.Form["SAMLResponse"].ToString()));
 
                         samlResponse.LoadXmlFromBase64(Request.Form["SAMLResponse"]); //SAML providers usually POST the data into this var
                                                                                       //String xmlExample = "";
                                                                                       //samlResponse.LoadXml(xmlExample);
 
-                        LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("samlResponse Object is: ", samlResponse.ToString()));
-
                         if (samlResponse.IsValid())
                         {
-                            LogToEventLog("DNN.Authentication.SAML.OnLoad()", "saml is valid");
-                            LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("samlResponse XML is: {0}", samlResponse.Xml.ToString()));
-                            //WOOHOO!!! user is logged in
-                            //YAY!
+                            LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("saml is valid. samlResponse XML is: {0}", samlResponse.Xml.ToString()));
 
                             //Obtain optional items
                             string username = "", email = "", firstname = "", lastname = "", displayname = "";
@@ -97,9 +91,6 @@ namespace DNN.Authentication.SAML
                                     }
 
                                 }
-
-
-                                LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("Username is: {0} ", username));
 
                                 email = samlResponse.GetUserProperty(config.usrEmail);
                                 if (email == null)
@@ -218,7 +209,6 @@ namespace DNN.Authentication.SAML
                                 {
                                     UserController.UnLockUser(userInfo);
                                 }
-                                LogToEventLog("DNN.Authentication.SAML.OnLoad()", String.Format("Existing User: {0}", userInfo.Username));
 
                                 try
                                 {
@@ -294,14 +284,11 @@ namespace DNN.Authentication.SAML
                 catch (System.Threading.ThreadAbortException tae)
                 {
                     LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("ThreadAbortException: {0}", tae.Message));
-                    //Response.Redirect(Page.ResolveUrl(redirectTo), false); 
                 }
                 catch (Exception ex)
                 {
                     LogToEventLog("DNN.Authentication.SAML.OnLoad()", string.Format("Exception: {0}", ex.Message));
-                    //redirectTo = "~/";
                 }
-                //Response.Redirect(Page.ResolveUrl(redirectTo), false);
             }
         }
 
